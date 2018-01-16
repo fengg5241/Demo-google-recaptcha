@@ -1,0 +1,51 @@
+<span style="font-size:14px;"><!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script>
+        var recaptchaResponse = "";
+        var correctCaptcha = function(response) {
+            recaptchaResponse = response;
+        };
+
+        function validate() {
+
+            var challenge = Recaptcha.get_challenge();
+            var response = recaptchaResponse;
+            $.ajax({
+                type: "POST",
+                url: "https://www.google.com/recaptcha/api/siteverify?aa=1",
+                async: false,
+                data: {
+                    challenge: challenge,
+                    response: recaptchaResponse
+                },
+                success: function(resp) {
+                    if(resp == "true") {
+                        document.getElementById("message").innerHTML = "Perfect!";
+                    }
+                    else {
+                        document.getElementById("message").innerHTML = "Incorrect Recaptcha! Please try again!";
+                        reloadRecaptcha();
+                    }
+                }
+            });
+            return false;
+        }
+
+    </script>
+</head>
+<body>
+
+    <form action="https://www.google.com/recaptcha/api/siteverify" method="post" onsubmit="return validate();">
+        <div class="g-recaptcha" data-sitekey="6LeO50AUAAAAADX3fY7XJu_rMk_FvvF08SZhODUe" data-callback="correctCaptcha"></div>
+
+        <p><button class="btn btn-primary" type="submit">Register</button>
+    </form>
+</body>
+</html>
+</span>
